@@ -57,7 +57,7 @@ class SyncListen(object):
                     "deposit_address": transfer["args"]["to"],
                     "network": self.network,
                     "hash": str(transfer["transactionHash"]),
-                    "amount": float(transfer["args"]["value"]) / 1000000,
+                    "amount": float(transfer["args"]["value"]) / 1*10**18,
                     "token": self.token
                 }
 
@@ -135,6 +135,6 @@ def start(network="goerli", sync_history=True):
 
 
 if __name__ == "__main__":
-    # start(network="goerli")
+    start(network="goerli")
     # start(network="main")
     start(network="bsc")
