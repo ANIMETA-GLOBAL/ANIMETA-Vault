@@ -1,0 +1,8 @@
+/TronVault/node_modules/
+/TronVault/.env
+/wallets_nc.csv
+/tron_wallets_1660551164.csv
+/rsa.pub
+/rsa.key
+/config.py
+TronVault/__pycache__/Tron_sync_history.cpython-39.pyc

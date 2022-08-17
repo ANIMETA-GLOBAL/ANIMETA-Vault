@@ -2,7 +2,6 @@ import asyncio
 import json
 import traceback
 from pprint import pprint as pp
-
 import web3
 from web3 import Web3
 import threading
@@ -30,7 +29,7 @@ class SyncListen(object):
         self.vault_db = VaultDB()
         self.vault_redis = VaultRedis()
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict()
-        print(self.event_list)
+        # print(self.event_list)
 
     # {'args': {'from': '0x00056A746Ccc5bC2fb05B4c1e6E274B8D1816739', 'to': '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640',
     #           'value': 8500000}, 'event': 'Transfer', 'logIndex': 200, 'transactionIndex': 86,
@@ -45,7 +44,7 @@ class SyncListen(object):
 
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
-
+            self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
             if transfer["args"]["to"] in self.wallet_dict:
                 wallet = self.wallet_dict[transfer["args"]["to"]]
                 # print(wallet)
@@ -58,47 +57,48 @@ class SyncListen(object):
                     "deposit_address": transfer["args"]["to"],
                     "network": self.network,
                     "hash": str(transfer["transactionHash"]),
-                    "amount": float(web3.Web3.fromWei(transfer["args"]["value"], 'ether')),
+                    "amount": float(transfer["args"]["value"]) / 1000000,
                     "token": self.token
                 }
 
                 self.vault_redis.upload(json.dumps(deposit_data))
                 self.vault_db.upload_deposit_history(deposit_data)
 
-
-
         except Exception as e:
-            print("error-", self.channel_name, event, "--", e)
-
-    def handle_history_event(self, event):
-        try:
-
-            print(self.channel_name, " : ", event)
-
-        except Exception as e:
-
             print("error-", self.channel_name, event, "--", e)
 
     async def log_loop(self, event_filter, poll_interval):
-
-        history_data = event_filter.get_all_entries()
-
-        if self.sync_history:
-            for n in history_data:
-                self.handle_history_event(n)
 
         while True:
             for event in event_filter.get_new_entries():
                 self.handle_event(event)
             await asyncio.sleep(poll_interval)
 
-    def run(self):
+    async def log_history(self, event_filter):
 
+        history_data = event_filter.get_all_entries()
+        # print(history_data)
+        for n in history_data:
+            # print(n)
+            self.handle_event(n)
+        print(self.network, "-", self.token, "sync history finished")
+
+    def run(self):
+        last_block = self.vault_redis.get_last_block(self.network)
+        print(self.network, "last_block:", last_block)
         event_filter_list = [
             self.contract.events[event_name].createFilter(fromBlock="latest", address=self.contract_address) for
             event_name in
             self.event_list]
+
+        log_history_list = [
+            self.contract.events[event_name].createFilter(fromBlock=int(last_block) - 10, toBlock="latest",
+                                                          address=self.contract_address) for
+            event_name in
+            self.event_list] if last_block else []
+
         loop_list = [self.log_loop(n, 2) for n in event_filter_list]
+        history_list = [self.log_history(n) for n in log_history_list] if self.sync_history else []
 
         new_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(new_loop)
@@ -107,14 +107,15 @@ class SyncListen(object):
             print(f'syncing {self.network}-{self.token}...')
             loop.run_until_complete(
                 asyncio.gather(
-                    *loop_list
+                    *(history_list + loop_list)
                 ))
-
+        except Exception as E:
+            print(E)
         finally:
             new_loop.close()
 
 
-def start(network="goerli", sync_history=False):
+def start(network="goerli", sync_history=True):
     with open('erc20ABI.json', 'r') as abi:
         abi = abi.read()
     thread_list = []
@@ -129,9 +130,11 @@ def start(network="goerli", sync_history=False):
         print(n.name)
         n.start()
 
-    for n in thread_list:
-        n.join()
+    # for n in thread_list:
+    #     n.join()
 
 
 if __name__ == "__main__":
-    start(network="goerli")
+    # start(network="goerli")
+    # start(network="main")
+    start(network="bsc")

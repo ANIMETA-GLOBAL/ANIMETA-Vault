@@ -1,0 +1,16 @@
+{
+  "name": "tronvault",
+  "version": "1.0.0",
+  "description": "python好像整不来tron，只好用js来写了捏",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bacar",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "redis": "^4.2.0",
+    "tronweb": "^4.3.0"
+  }
+}
