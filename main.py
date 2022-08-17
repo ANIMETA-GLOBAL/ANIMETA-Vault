@@ -44,7 +44,7 @@ class SyncListen(object):
 
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
-            self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
+            # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
             if transfer["args"]["to"] in self.wallet_dict:
                 wallet = self.wallet_dict[transfer["args"]["to"]]
                 # print(wallet)
@@ -57,7 +57,7 @@ class SyncListen(object):
                     "deposit_address": transfer["args"]["to"],
                     "network": self.network,
                     "hash": str(transfer["transactionHash"]),
-                    "amount": float(transfer["args"]["value"]) / (1*10**18),
+                    "amount": float(transfer["args"]["value"]) / (1 * 10 ** 18),
                     "token": self.token
                 }
 
@@ -67,12 +67,28 @@ class SyncListen(object):
         except Exception as e:
             print("error-", self.channel_name, event, "--", e)
 
-    async def log_loop(self, event_filter, poll_interval):
+    async def log_loop(self, event_filter, poll_interval, is_block_filter=False):
+        if not is_block_filter:
+            while True:
+                try:
 
-        while True:
-            for event in event_filter.get_new_entries():
-                self.handle_event(event)
-            await asyncio.sleep(poll_interval)
+                    for event in event_filter.get_new_entries():
+                        self.handle_event(event)
+                    await asyncio.sleep(poll_interval)
+                except Exception as E:
+                    print(self.network,self.token,"syncing event:",E)
+        else:
+            while True:
+                try:
+                    for block in event_filter.get_new_entries():
+                        # block = json.loads(Web3.toJSON(block))
+                        # latest_block = self.web3.eth.get_block('latest')
+                        # print(self.network, block,self.web3.eth.block_number)
+                        self.vault_redis.set_last_block(self.network,self.web3.eth.block_number)
+                        await asyncio.sleep(poll_interval)
+                except Exception as E:
+                    print(self.network, self.token, "syncing latest block:", E)
+
 
     async def log_history(self, event_filter):
 
@@ -91,13 +107,16 @@ class SyncListen(object):
             event_name in
             self.event_list]
 
+        block_filter = self.web3.eth.filter('latest')
+
         log_history_list = [
-            self.contract.events[event_name].createFilter(fromBlock=int(last_block) - 10, toBlock="latest",
+            self.contract.events[event_name].createFilter(fromBlock=int(last_block), toBlock="latest",
                                                           address=self.contract_address) for
             event_name in
             self.event_list] if last_block else []
 
         loop_list = [self.log_loop(n, 2) for n in event_filter_list]
+        loop_list.append(self.log_loop(block_filter, 2, True))
         history_list = [self.log_history(n) for n in log_history_list] if self.sync_history else []
 
         new_loop = asyncio.new_event_loop()
@@ -110,21 +129,24 @@ class SyncListen(object):
                     *(history_list + loop_list)
                 ))
         except Exception as E:
-            print(E)
+            print(self.network,"--",self.token,self,"--",E)
         finally:
             new_loop.close()
 
 
-def start(network="goerli", sync_history=True):
+def start(sync_history=True):
     with open('erc20ABI.json', 'r') as abi:
         abi = abi.read()
     thread_list = []
-    for token_name in deposit_currency_config.address[network]:
-        sync = SyncListen(provider=config.provider[network], token=token_name, network=network,
-                          contract_address=deposit_currency_config.address[network][token_name], contract_abi=abi,
-                          channel_name=f"{network}-{token_name}", sync_history=sync_history)
-        thread = threading.Thread(target=sync.run, name=f"{network}-{token_name}")
-        thread_list.append(thread)
+
+    for network in deposit_currency_config.address:
+
+        for token_name in deposit_currency_config.address[network]:
+            sync = SyncListen(provider=config.provider[network], token=token_name, network=network,
+                              contract_address=deposit_currency_config.address[network][token_name], contract_abi=abi,
+                              channel_name=f"{network}-{token_name}", sync_history=sync_history)
+            thread = threading.Thread(target=sync.run, name=f"{network}-{token_name}")
+            thread_list.append(thread)
 
     for n in thread_list:
         print(n.name)
@@ -135,6 +157,4 @@ def start(network="goerli", sync_history=True):
 
 
 if __name__ == "__main__":
-    start(network="goerli")
-    # start(network="main")
-    start(network="bsc")
+    start()
