@@ -14,3 +14,11 @@ address = {
         "USDT":"0x494852E7A65493C4BFA4C14fC06827F2fe679482"
     }
 }
+
+
+provider = {
+    "ethereum": "https://eth-goerli.g.alchemy.com/v2/9fhpzXo-38LCqmunGaBL8Ebn8jAAxbHJ",
+    # "main": "https://eth-mainnet.g.alchemy.com/v2/U_1S-qkZUOvHgqSmMJVeFoMfbkxcpt17",
+    "bsc": "https://bsctestapi.terminet.io/rpc",
+    "polygon":"https://polygon-mumbai.g.alchemy.com/v2/dh6Ti4G_xNDrxFUylAJSAASnjHcXqEoH"
+}

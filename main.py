@@ -142,7 +142,7 @@ def start(sync_history=True):
     for network in deposit_currency_config.address:
 
         for token_name in deposit_currency_config.address[network]:
-            sync = SyncListen(provider=config.provider[network], token=token_name, network=network,
+            sync = SyncListen(provider=deposit_currency_config.provider[network], token=token_name, network=network,
                               contract_address=deposit_currency_config.address[network][token_name], contract_abi=abi,
                               channel_name=f"{network}-{token_name}", sync_history=sync_history)
             thread = threading.Thread(target=sync.run, name=f"{network}-{token_name}")
