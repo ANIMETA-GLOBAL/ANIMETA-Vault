@@ -26,6 +26,23 @@ class VaultDB(object):
         except Exception as E:
             print(E)
 
+    def get_deposit_wallet_dict_tron(self):
+
+        try:
+            with self.con.cursor() as cursor:
+                sql = f"select id,wallet_address,user_id from {config.wallet_table_tron} "
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                wallet_dict = {}
+                a = [wallet_dict.update({n[1]: {
+                    "user_id": n[2],
+                    "wallet_id": n[0]
+                }}) for n in result]
+                return wallet_dict
+
+        except Exception as E:
+            print(E)
+
     def upload_deposit_history(self, data):
         try:
             with self.con.cursor() as cursor:
@@ -47,7 +64,7 @@ class VaultDB(object):
 
 if __name__ == '__main__':
     T = VaultDB()
-    dict = T.get_deposit_wallet_dict()
+    dict = T.get_deposit_wallet_dict_tron()
 
-    if "0xFA8e68e7c4e46d6f8F14bd1109111cd537FEeBC3" in dict:
-        print("True", dict["0xFA8e68e7c4e46d6f8F14bd1109111cd537FEeBC3"])
+    if "TVPH3zumSz3MRni27d7wXSrc8XFpmfQgKw" in dict:
+        print("True", dict["TVPH3zumSz3MRni27d7wXSrc8XFpmfQgKw"])

@@ -10,3 +10,7 @@ TronVault/__pycache__/Tron_sync_history.cpython-39.pyc
 *.pyc
 *.pyc
 __pycache__/config.cpython-39.pyc
+*.pyc
+__pycache__/deposit_currency_config.cpython-39.pyc
+__pycache__/config.cpython-39.pyc
+__pycache__/mysql_handle.cpython-39.pyc

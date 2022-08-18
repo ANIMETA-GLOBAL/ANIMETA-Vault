@@ -104,12 +104,6 @@ class SyncListen(object):
     def run(self):
         last_block = self.vault_redis.get_last_block(self.network)
         print(self.network, "last_block:", last_block)
-        event_filter_list = [
-            self.contract.events[event_name].createFilter(fromBlock="latest", address=self.contract_address) for
-            event_name in
-            self.event_list]
-
-        block_filter = self.web3.eth.filter('latest')
 
         log_history_list = [
             self.contract.events[event_name].createFilter(fromBlock=int(last_block), toBlock="latest",
@@ -117,7 +111,7 @@ class SyncListen(object):
             event_name in
             self.event_list] if last_block else []
 
-        loop_list = [self.log_loop(2),self.log_loop(2, True)]
+        loop_list = [self.log_loop(2), self.log_loop(2, True)]
 
         history_list = [self.log_history(n) for n in log_history_list] if self.sync_history else []
 

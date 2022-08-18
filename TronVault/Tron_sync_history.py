@@ -41,8 +41,7 @@ class SyncHistory(object):
             res += self.get_from_block(block_number=block_number, fingerprint=next_fingerprint)
 
         res += result['data']
-        print(len(result['data']))
-        print(f"sync block:{block_number} success")
+        # print(len(result['data']))
         for n in res:
             self.pool.rpush("TronTransferHistory", json.dumps(n))
 
@@ -50,8 +49,10 @@ class SyncHistory(object):
 
     def get_sync_history(self, from_block, to_block=None):
         history_event = []
+
         if not to_block:
             to_block = self.get_latest_block()
+            print(f"sync from {from_block} to {to_block}")
         with ThreadPoolExecutor(50) as t:
             for n in range(int(from_block), to_block):
                 t.submit(self.get_from_block, n)
