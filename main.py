@@ -1,3 +1,5 @@
+# utf-8
+
 import asyncio
 import json
 import traceback
@@ -45,6 +47,7 @@ class SyncListen(object):
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
             # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
+            pp(transfer)
             if transfer["args"]["to"] in self.wallet_dict:
                 wallet = self.wallet_dict[transfer["args"]["to"]]
                 # print(wallet)
@@ -61,11 +64,12 @@ class SyncListen(object):
                     "token": self.token
                 }
 
-                VaultRedis().upload(json.dumps(deposit_data))
                 self.vault_db.upload_deposit_history(deposit_data)
+                VaultRedis().upload(json.dumps(deposit_data))
+
 
         except Exception as e:
-            print("error-", self.channel_name, event, "--", e)
+            print("error-", self.channel_name, "--", e)
 
     async def log_loop(self, poll_interval, is_block_filter=False):
 

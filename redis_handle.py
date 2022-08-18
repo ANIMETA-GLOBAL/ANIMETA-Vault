@@ -20,7 +20,7 @@ class VaultRedis(object):
             return True
 
         except Exception as e:
-            print(e)
+            print("upload redis", e)
             return False
 
     def get_last_block(self, network: str):
