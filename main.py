@@ -27,7 +27,7 @@ class SyncListen(object):
         self.event_list = ["Transfer"]
         self.sync_history = sync_history
         self.vault_db = VaultDB()
-        self.vault_redis = VaultRedis()
+        # self.vault_redis = VaultRedis()
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict()
         # print(self.event_list)
 
@@ -61,7 +61,7 @@ class SyncListen(object):
                     "token": self.token
                 }
 
-                self.vault_redis.upload(json.dumps(deposit_data))
+                VaultRedis().vault_redis.upload(json.dumps(deposit_data))
                 self.vault_db.upload_deposit_history(deposit_data)
 
         except Exception as e:
@@ -86,7 +86,7 @@ class SyncListen(object):
                 try:
                     while True:
                         for block in block_filter.get_new_entries():
-                            self.vault_redis.set_last_block(self.network, self.web3.eth.block_number)
+                            VaultRedis().vault_redis.set_last_block(self.network, self.web3.eth.block_number)
                             await asyncio.sleep(poll_interval)
 
                 except Exception as E:
@@ -102,7 +102,7 @@ class SyncListen(object):
         print(self.network, "-", self.token, "sync history finished")
 
     def run(self):
-        last_block = self.vault_redis.get_last_block(self.network)
+        last_block = VaultRedis().vault_redis.get_last_block(self.network)
         print(self.network, "last_block:", last_block)
 
         log_history_list = [
