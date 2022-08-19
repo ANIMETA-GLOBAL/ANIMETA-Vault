@@ -28,7 +28,7 @@ class SyncListen(object):
         self.contract = self.web3.eth.contract(address=self.contract_address, abi=self.contract_abi)
         self.event_list = ["Transfer"]
         self.sync_history = sync_history
-        self.vault_db = VaultDB()
+        # self.vault_db = VaultDB()
         # self.vault_redis = VaultRedis()
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict()
         # print(self.event_list)
@@ -64,7 +64,7 @@ class SyncListen(object):
                     "token": self.token
                 }
 
-                self.vault_db.upload_deposit_history(deposit_data)
+                VaultDB().upload_deposit_history(deposit_data)
                 VaultRedis().upload(json.dumps(deposit_data))
 
 
