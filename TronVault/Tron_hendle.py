@@ -26,7 +26,7 @@ class TronTrc20(object):
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict_tron()
         # print(self.wallet_dict)
     def handle_evnet(self):
-        print("getting lates event")
+        print("getting latest event")
         while True:
             tx = self.pool.lpop("TronTransfer")
             # print(tx)
@@ -55,8 +55,8 @@ class TronTrc20(object):
                             "token": "USDT"
                         }
                         pp(deposit_data)
-                        self.vault_redis.upload(json.dumps(deposit_data))
-                        self.vault_db.upload_deposit_history(deposit_data)
+                        VaultRedis().upload(json.dumps(deposit_data))
+                        VaultDB().upload_deposit_history(deposit_data)
 
                     # if to_address in wallet_list:
 
@@ -90,8 +90,8 @@ class TronTrc20(object):
                                 "token": "USDT"
                             }
                             pp(deposit_data)
-                            self.vault_redis.upload(json.dumps(deposit_data))
-                            self.vault_db.upload_deposit_history(deposit_data)
+                            VaultRedis().upload(json.dumps(deposit_data))
+                            VaultDB().upload_deposit_history(deposit_data)
 
     def run(self):
         with ThreadPoolExecutor(2) as t:
