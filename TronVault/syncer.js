@@ -3,6 +3,7 @@ const HttpProvider = "https://api.trongrid.io";
 
 const dotenv  = require('dotenv')
 dotenv.config()
+console.log(dotenv)
 // console.log(HttpProvider);
 // let fullNode = 'https://api.trongrid.io';
 // let solidityNode = 'https://api.trongrid.io';
