@@ -16,7 +16,7 @@ const  redis = require('redis');
 
 const redispwd = process.env.REDISPWD
 const redishost = process.env.REDISHOST
-// console.log(redispwd)
+ console.log(redishost)
 const client = redis.createClient({
     socket: {
         host: redishost,
