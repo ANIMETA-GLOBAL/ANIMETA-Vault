@@ -32,6 +32,7 @@ class TronTrc20(object):
             # print(tx)
             if tx:
                 # print(tx)
+                VaultRedis().set_latest_tx("tron",tx)
                 event = json.loads(tx)
                 # print(event["token"])
                 # self.pool.set("last_block_TUSDT", event["blockNumber"])
