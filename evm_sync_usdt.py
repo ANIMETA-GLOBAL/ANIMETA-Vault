@@ -118,7 +118,7 @@ class SyncListen(object):
             event_name in
             self.event_list] if last_block else []
 
-        loop_list = [self.log_loop(2), self.log_loop(2, True)]
+        loop_list = [self.log_loop(10), self.log_loop(10, True)]
 
         history_list = [self.log_history(n) for n in log_history_list] if self.sync_history else []
 
