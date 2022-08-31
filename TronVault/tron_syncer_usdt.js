@@ -5,12 +5,12 @@ const dotenv  = require('dotenv')
 dotenv.config()
 // console.log(dotenv)
 // console.log(HttpProvider);
-// let fullNode = 'https://api.trongrid.io';
-// let solidityNode = 'https://api.trongrid.io';
-// let eventServer = 'https://api.trongrid.io';
-let fullNode = 'https://nile.trongrid.io';
-let solidityNode = 'https://nile.trongrid.io';
-let eventServer = 'https://nile.trongrid.io';
+ let fullNode = 'https://api.trongrid.io';
+ let solidityNode = 'https://api.trongrid.io';
+ let eventServer = 'https://api.trongrid.io';
+//let fullNode = 'https://nile.trongrid.io';
+//let solidityNode = 'https://nile.trongrid.io';
+//let eventServer = 'https://nile.trongrid.io';
 const privateKey = process.env.TRONPRIVATE;
 const tronWeb = new TronWeb(fullNode, solidityNode, eventServer, privateKey);
 const  redis = require('redis');
@@ -35,8 +35,8 @@ process.on('uncaughtException', function (err) {
 async function start_sync() {
     console.log("syncing tron usdt");
     await client.connect();
-    // const trc20ContractAddress = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"; //mainnet USDT contract
-    const trc20ContractAddress = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj"; //neil USDT contract
+     const trc20ContractAddress = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"; //mainnet USDT contract
+//    const trc20ContractAddress = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj"; //neil USDT contract
     let contract = await tronWeb.contract().at(trc20ContractAddress);
     await contract && contract.Transfer().watch((err, event) => {
         if (err)
@@ -55,7 +55,8 @@ async function start_sync() {
             "eventName":event.name,
             "transactionHash":event.transaction,
             "blockNumber":event.block,
-            "result":event.result
+            "result":event.result,
+            "token":"USDT"
         }
         // console.log(JSON.parse(data));
         client.set("last_block_TUSDT",event.block)

@@ -26,6 +26,24 @@ class VaultDB(object):
         except Exception as E:
             print(E)
 
+    def get_deposit_wallet_full(self):
+        try:
+            with self.con.cursor() as cursor:
+                sql = f"select id,wallet_address,user_id,private_key from {config.wallet_table} "
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                # print(result)
+                wallet_dict = {}
+                a = [wallet_dict.update({n[1]: {
+                    "user_id": n[2],
+                    "wallet_id": n[0],
+                    "private_key":n[3]
+                }}) for n in result]
+                return wallet_dict
+
+        except Exception as E:
+            print(E)
+
     def get_deposit_wallet_dict_tron(self):
 
         try:
@@ -39,6 +57,17 @@ class VaultDB(object):
                     "wallet_id": n[0]
                 }}) for n in result]
                 return wallet_dict
+
+        except Exception as E:
+            print(E)
+
+    def get_deposited_wallet(self,network):
+        try:
+            with self.con.cursor() as cursor:
+                sql = f"select deposit_wallet_address from {config.deposited_table} where network = '{network}' "
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return set([n[0] for n in result])
 
         except Exception as E:
             print(E)
@@ -64,7 +93,5 @@ class VaultDB(object):
 
 if __name__ == '__main__':
     T = VaultDB()
-    dict = T.get_deposit_wallet_dict_tron()
-
-    if "TVPH3zumSz3MRni27d7wXSrc8XFpmfQgKw" in dict:
-        print("True", dict["TVPH3zumSz3MRni27d7wXSrc8XFpmfQgKw"])
+    dict = T.get_deposited_wallet('ethereum')
+    print(dict)

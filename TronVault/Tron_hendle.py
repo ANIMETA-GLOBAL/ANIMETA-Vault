@@ -31,18 +31,20 @@ class TronTrc20(object):
             tx = self.pool.lpop("TronTransfer")
             # print(tx)
             if tx:
-                print(tx)
+                # print(tx)
                 event = json.loads(tx)
-                self.pool.set("last_block_TUSDT", event["blockNumber"])
+                # print(event["token"])
+                # self.pool.set("last_block_TUSDT", event["blockNumber"])
 
                 if event["eventName"] == "Transfer":
-                    pp(event)
+                    # pp(event)
                     from_address = Tron().to_base58check_address(event["result"]["from"])
                     to_address = Tron().to_base58check_address(event["result"]["to"])
                     value = float(event["result"]["value"]) / 1000000
                     transaction_hash = event["transactionHash"]
 
                     if to_address in self.wallet_dict:
+                        print()
                         wallet = self.wallet_dict[to_address]
                         deposit_data = {
                             "user_id": wallet["user_id"] if wallet["user_id"] else "0000",
@@ -52,7 +54,7 @@ class TronTrc20(object):
                             "network": "tron",
                             "hash": transaction_hash,
                             "amount": value ,
-                            "token": "USDT"
+                            "token": event["token"]
                         }
                         pp(deposit_data)
                         VaultRedis().upload(json.dumps(deposit_data))

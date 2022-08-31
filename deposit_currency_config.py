@@ -4,21 +4,21 @@ address = {
     #     "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     # },
     "ethereum": {
-        "USDT": "0x0B99a72bebFE91B14529ea412eb2B1dBEE604c4C",
-        "USDC": "0xc4Bd3daeAEA163C22d4DD03519e696903155c27D",
+        "USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     },
     "bsc": {
-        "USDT": "0x5B821F943439589aF8b7c081De2290a131600a67",
+        "USDT": "0x55d398326f99059fF775485246999027B3197955",
+        "USDC": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
     },
-    "polygon":{
-        "USDT":"0x494852E7A65493C4BFA4C14fC06827F2fe679482"
+    "polygon": {
+        "USDT": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+        "USDC": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     }
 }
 
-
 provider = {
-    "ethereum": "https://eth-goerli.g.alchemy.com/v2/9fhpzXo-38LCqmunGaBL8Ebn8jAAxbHJ",
-    # "main": "https://eth-mainnet.g.alchemy.com/v2/U_1S-qkZUOvHgqSmMJVeFoMfbkxcpt17",
-    "bsc": "https://bsctestapi.terminet.io/rpc",
-    "polygon":"https://polygon-mumbai.g.alchemy.com/v2/dh6Ti4G_xNDrxFUylAJSAASnjHcXqEoH"
+    "ethereum": "https://eth-mainnet.g.alchemy.com/v2/llwX-mdXhLQOZUYWOHg-FvzPzrK_vpaY",
+    "bsc": "https://bsc-dataseed4.binance.org",
+    "polygon": "https://polygon-mainnet.g.alchemy.com/v2/cXJXX5avXeAaGhRtojn2Lp5dS9ZXRYPy"
 }
