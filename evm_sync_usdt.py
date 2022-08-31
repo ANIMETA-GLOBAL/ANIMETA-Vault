@@ -31,6 +31,7 @@ class SyncListen(object):
         self.vault_db = VaultDB()
         # self.vault_redis = VaultRedis()
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict()
+        print(list(self.wallet_dict.keys())[0])
         # print(self.event_list)
 
     # {'args': {'from': '0x00056A746Ccc5bC2fb05B4c1e6E274B8D1816739', 'to': '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640',
