@@ -13,7 +13,7 @@ import deposit_currency_config
 import csv
 from mysql_handle import VaultDB
 from redis_handle import VaultRedis
-
+import time
 
 class SyncListen(object):
     def __init__(self, token, network, provider, contract_address, contract_abi, channel_name, sync_history=False):
@@ -47,8 +47,9 @@ class SyncListen(object):
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
             # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
-            pp(transfer)
+
             if transfer["args"]["to"] in self.wallet_dict:
+                pp(transfer)
                 wallet = self.wallet_dict[transfer["args"]["to"]]
                 # print(wallet)
                 # print(transfer["transactionHash"])
@@ -91,6 +92,7 @@ class SyncListen(object):
                     while True:
                         for block in block_filter.get_new_entries():
                             VaultRedis().set_last_block(self.network, self.web3.eth.block_number)
+                            print(time.asctime( time.localtime(time.time()) ),self.network, self.web3.eth.block_number)
                             await asyncio.sleep(poll_interval)
 
                 except Exception as E:
@@ -134,7 +136,7 @@ class SyncListen(object):
             new_loop.close()
 
 
-def start(sync_history=True):
+def start(sync_history=False):
     with open('erc20ABI.json', 'r') as abi:
         abi = abi.read()
     thread_list = []
