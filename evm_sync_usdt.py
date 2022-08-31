@@ -48,7 +48,7 @@ class SyncListen(object):
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
             # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
-
+            VaultRedis().set_latest_tx(self.network,Web3.toJSON(event))
             if transfer["args"]["to"] in self.wallet_dict:
                 pp(transfer)
                 wallet = self.wallet_dict[transfer["args"]["to"]]

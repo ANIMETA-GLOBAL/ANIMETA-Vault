@@ -30,3 +30,7 @@ class VaultRedis(object):
     def set_last_block(self, network: str, block_number):
         pool = redis.Redis(host=self.host, port=self.port, decode_responses=True, password=config.redis_pwd, db=0)
         pool.set(f"last_block_{network}", block_number)
+
+    def set_latest_tx(self, network: str,tx):
+        pool = redis.Redis(host=self.host, port=self.port, decode_responses=True, password=config.redis_pwd, db=0)
+        pool.set(f"last_tx_{network}", tx)
