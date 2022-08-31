@@ -19,6 +19,6 @@ address = {
 
 provider = {
     "ethereum": "https://eth-mainnet.g.alchemy.com/v2/llwX-mdXhLQOZUYWOHg-FvzPzrK_vpaY",
-    "bsc": "https://bsc-dataseed4.binance.org",
+    "bsc": "https://bsc-dataseed1.binance.org/",
     "polygon": "https://polygon-mainnet.g.alchemy.com/v2/cXJXX5avXeAaGhRtojn2Lp5dS9ZXRYPy"
 }
