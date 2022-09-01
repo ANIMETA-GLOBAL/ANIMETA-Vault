@@ -62,7 +62,7 @@ class SyncListen(object):
                     "deposit_address": transfer["args"]["to"],
                     "network": self.network,
                     "hash": str(transfer["transactionHash"]),
-                    "amount": float(transfer["args"]["value"]) / (1 * 10 ** 18),
+                    "amount": float(transfer["args"]["value"]) / (1 * 10 ** 6),
                     "token": self.token
                 }
 
