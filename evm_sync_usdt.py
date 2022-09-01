@@ -15,6 +15,7 @@ from mysql_handle import VaultDB
 from redis_handle import VaultRedis
 import time
 
+
 class SyncListen(object):
     def __init__(self, token, network, provider, contract_address, contract_abi, channel_name, sync_history=False):
         self.provider = provider
@@ -48,7 +49,7 @@ class SyncListen(object):
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
             # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
-            VaultRedis().set_latest_tx(self.network,Web3.toJSON(event))
+            VaultRedis().set_latest_tx(self.network, Web3.toJSON(event))
             if transfer["args"]["to"] in self.wallet_dict:
                 pp(transfer)
                 wallet = self.wallet_dict[transfer["args"]["to"]]
@@ -93,7 +94,7 @@ class SyncListen(object):
                     while True:
                         for block in block_filter.get_new_entries():
                             VaultRedis().set_last_block(self.network, self.web3.eth.block_number)
-                            print(time.asctime( time.localtime(time.time()) ),self.network, self.web3.eth.block_number)
+                            print(time.asctime(time.localtime(time.time())), self.network, self.web3.eth.block_number)
                             await asyncio.sleep(poll_interval)
 
                 except Exception as E:
