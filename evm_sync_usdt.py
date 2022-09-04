@@ -45,7 +45,7 @@ class SyncListen(object):
     #  data["network"], data["hash"], data["amount"], data["token"]))
     def handle_event(self, event):
         try:
-
+            DECIMAL = (1 * 10 ** 6) if self.network != "bsc" else (1 * 10 ** 18)
             # print(self.channel_name, " : ", event)
             transfer = json.loads(Web3.toJSON(event))
             # self.vault_redis.set_last_block(self.network, transfer["blockNumber"])
@@ -63,7 +63,7 @@ class SyncListen(object):
                     "deposit_address": transfer["args"]["to"],
                     "network": self.network,
                     "hash": str(transfer["transactionHash"]),
-                    "amount": float(transfer["args"]["value"]) / (1 * 10 ** 6),
+                    "amount": float(transfer["args"]["value"]) / DECIMAL,
                     "token": self.token
                 }
 
