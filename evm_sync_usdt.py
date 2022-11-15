@@ -86,7 +86,7 @@ class SyncListen(object):
                             self.handle_event(event)
                         await asyncio.sleep(poll_interval)
                 except Exception as E:
-                    print(self.network, self.token, "syncing latest block:", E)
+                    print(self.network, self.token, "syncing latest event block:", E)
         else:
             while True:
                 block_filter = self.web3.eth.filter('latest')

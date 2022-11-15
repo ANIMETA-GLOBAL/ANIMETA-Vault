@@ -8,7 +8,7 @@ import Tron_sync_history
 from concurrent.futures import ThreadPoolExecutor
 from mysql_handle import VaultDB
 from redis_handle import VaultRedis
-
+import datetime
 load_dotenv()
 
 REDIS_HOST = os.getenv('REDISHOST')
@@ -26,7 +26,7 @@ class TronTrc20(object):
         self.wallet_dict = self.vault_db.get_deposit_wallet_dict_tron()
         # print(self.wallet_dict)
     def handle_evnet(self):
-        print("getting latest event")
+        print("getting latest event",datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         while True:
             tx = self.pool.lpop("TronTransfer")
             # print(tx)
